@@ -102,7 +102,7 @@ function upstreamRequest(recID, wavFile, token) {
         request(optionsUR)
           .then(function(data){
           console.log(data, 'DATA FROM UPSTREAM REQUEST');
-          resolve(recID, token);
+          resolve(data);
         })
         .catch(function(err){
           console.log('Err from upstreamRequest', err);
@@ -149,9 +149,9 @@ module.exports.beyondVerbalAnalysis = function(audioFile) {
 
     authenticate(audioFile).then(function(token){
       analyzeFile(token).then(function(recID){
-        upstreamRequest(recID, audioFile, token).then(function(){
+        upstreamRequest(recID, audioFile, token).then(function(upstreamdata){
           getAnalysis(recID, 10000, token).then(function(res){
-            resolve(res)
+            resolve([res, upstreamdata])
           })
         })
       })
