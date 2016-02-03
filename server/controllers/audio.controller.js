@@ -33,25 +33,23 @@ var extractAudio = function(videoURL) {
 };
 
 module.exports.audioAnalysis = function(videoURL){
-  var wavFile = path.join(__dirname + '/wavFiles/' + 'file.wav');
-  // extractAudio(videoURL)
-  // .then(function(wavFile){
+  extractAudio(videoURL)
+  .then(function(wavFile){
     beyondVerbal.beyondVerbalAnalysis(wavFile).then(function(results){
       console.log(results[0], 'beyond verbal data in audioanalysis');
       console.log(results[1], 'upstreamdata')
     });      //save beyondVerbalResults to db
-    // watsonAnalysis.watsonSpeechToText(wavFile)       //save watsonResults to db
-    //   .then(function(watsonResults){
-    //     console.log('would run alchemyAnalysis now');
-    //     alchemy.alchemyAnalysis(watsonResults)
-    //       .then(function(alchemyResults){
-    //         console.log(alchemyResults);
-    //       }); //save alchemyResults to db
-    //   })
-  // });
+    watsonAnalysis.watsonSpeechToText(wavFile)       //save watsonResults to db
+      .then(function(watsonResults){
+        console.log('would run alchemyAnalysis now');
+        alchemy.alchemyAnalysis(watsonResults)
+          .then(function(alchemyResults){
+            console.log(alchemyResults);
+          }); //save alchemyResults to db
+      })
+  });
 };
 
-module.exports.audioAnalysis();
 
 
 
