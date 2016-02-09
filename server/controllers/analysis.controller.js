@@ -56,15 +56,13 @@ module.exports.getAnalysisData = function(req, response){
     }else{
       if(req.session.user === analysis.username){
         if(analysis.isRecorded){
-          extractAudio(analysis.audioFile, 'ablkjlsdf').then(function(file){
-            response.setHeader('Content-type', 'audio/wav');
-            response.sendFile(file, function(err){
-              if(err){
-                response.status(err.status).end();
-              } else {
-                console.log('sent file')
-              }
-            });
+          fs.readFile(analysis.audioFile, 'binary', function(err, data){
+            if(err){
+              console.log('error readfile')
+            } else {
+              analysis.audioFile = data;
+              response.status(200).send(JSON.stringify(analysis));
+            }
           })
           // fs.readFile(analysis.audioFile, 'utf-8', function(err, data){
           //   if(err){

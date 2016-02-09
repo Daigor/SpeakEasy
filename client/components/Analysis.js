@@ -33,7 +33,8 @@ var Analysis = React.createClass({
     helpers.getVideoAnalysis(this.props.params.videoID)
       .then(function(response){
         console.log(response)
-        this.refs.audio.src = response.data
+        this.refs.audio.src = "data:audio/wav;base64," + response.data.audioFile
+
         // if(response.status === 401){
         //   this.props.history.transitionTo({
         //     pathname: '/public',
