@@ -8,7 +8,8 @@ var notify = require('./notification.controller.js');
 var apiKeys = require('../config.js');
 var audio = require('./audio.controller.js');
 var fs = require('fs');
-
+var ffmpeg = require('fluent-ffmpeg');
+var path = require('path');
 
 module.exports.analyze = function (userData, currentUser, audioFile) {
   var jobID = userData.shortcode;
@@ -54,7 +55,31 @@ module.exports.getAnalysisData = function(req, response){
       console.log(err);
     }else{
       if(req.session.user === analysis.username){
-        response.status(200).send(JSON.stringify(analysis));
+        if(analysis.isRecorded){
+          extractAudio(analysis.audioFile, 'ablkjlsdf').then(function(file){
+            response.setHeader('Content-type', 'audio/wav');
+            response.sendFile(file, function(err){
+              if(err){
+                response.status(err.status).end();
+              } else {
+                console.log('sent file')
+              }
+            });
+          })
+          // fs.readFile(analysis.audioFile, 'utf-8', function(err, data){
+          //   if(err){
+          //     console.log('error reading audio file')
+
+          //     response.status(200).send(JSON.stringify(analysis));
+          //   } else {  
+      
+          //     analysis.audio = data;
+          //     response.status(200).send(JSON.stringify(analysis));
+          //   }
+          // })
+        } else {
+          response.status(200).send(JSON.stringify(analysis));
+        }
       } else {
         //not authorized
         response.sendStatus(401)
@@ -95,6 +120,20 @@ module.exports.delete = function(req, res){
   })
 }
 
-
+var extractAudio = function(videoURL, uniqueID) {
+  return new Promise(function(resolve, reject){
+    console.log("extracting audio")
+    var wavFile = path.join(__dirname + '/wavFiles/' + uniqueID + 'file.wav');
+    ffmpeg(videoURL)
+      .output(wavFile)
+      .on('end', function(){
+        resolve(wavFile);
+      })
+      .on('error', function(err){
+        reject('extracted audio error');
+      })
+      .run();
+  })
+};
 
 

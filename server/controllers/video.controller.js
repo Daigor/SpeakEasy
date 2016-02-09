@@ -21,7 +21,7 @@ var getPublicVideos = function(req, response) {
 
 var getComments = function(videoId, response) {
   Analysis.find({ _id: videoId },
-  '_id videoUrl date title thumbnail_url description username comments')
+  '_id videoUrl date title thumbnail_url description username comments isRecorded')
   .then(function(data) {
     var commentData = JSON.stringify(data);
     response.status(200).send(commentData);

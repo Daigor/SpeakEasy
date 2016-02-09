@@ -158,6 +158,7 @@ var PublicVideoComments = React.createClass({
   componentWillMount: function() {
     helpers.getVideoComments(this.props.params.videoID)
       .then(function(response){
+        console.log(response, 'public video comments')
         this.setState({
           videoSource: response.data[0].videoUrl,
           videoTitle: response.data[0].title,
