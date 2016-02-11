@@ -23,7 +23,7 @@ var Video = React.createClass({
 
                       </div>
                     </a>
-                    <div className="card-content">
+                    <div className="card-content truncate">
                       <p>Description: {item.description}</p>
                     </div>
                     <div id='time'>
